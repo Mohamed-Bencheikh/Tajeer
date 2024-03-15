@@ -134,7 +134,7 @@ async def get_current_user(request: Request):
 async def upload_audio(file: UploadFile = File(...),current_user: dict = Depends(get_current_user)):
     
   fname = file.filename
-  if fname.endswith('.mp3') or fname.endswith('.png'):
+  if fname.endswith('.mp3') or fname.endswith('.wav'):
     with open(f"audio_{fname}", "wb") as audio:
         audio.write(await file.read())
     return {"message": "Audio uploaded successfully"}
