@@ -1,0 +1,12 @@
+@font-face {
+	font-family: 'LineIcons';
+	src: url(../../assets/fonts/LineIcons-caf228aa23e7a8dffd807183d8130c2e.eot) format('embedded-opentype'),
+	url(../../assets/fonts/LineIcons-caf228aa23e7a8dffd807183d8130c2e.eot) format('embedded-opentype'),
+	url(../../assets/fonts/LineIcons-d3e3a328d6ce8c700018a164e36f3a73.woff2) format('woff2'),
+	url(../../assets/fonts/LineIcons-f1b5f8156d743f1cd8ffc2ebc3e09bd0.woff) format('woff'),
+	url(../../assets/fonts/LineIcons-a50e803e4eb2e3d19b430bcb858fcdda.ttf) format('truetype'),
+	url(../../assets/fonts/LineIcons-6c22a938887798a840cede82019e3121.svg) format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: auto;
+}

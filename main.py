@@ -18,7 +18,7 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 # inlHA7sbN8Yi4srm
 @app.get("/")
 def index(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
+    return templates.TemplateResponse("home.html", {"request": request})
     # return RedirectResponse(url="/user/login")
 
 
@@ -42,12 +42,12 @@ def connect(username: str = Form(...), password: str = Form(...)):
 # Define the route to serve the HTML form
 
 
-@app.get("/user/login", response_class=HTMLResponse)
+@app.get("/login", response_class=HTMLResponse)
 async def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 
-@app.post("/user/login")
+@app.post("/login")
 def login(request: Request, username: str = Form(...), password: str = Form(...)):
 
     try:
@@ -56,7 +56,7 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
             "password": password
         })
         if user:
-            return templates.TemplateResponse("welcome.html",
+            return templates.TemplateResponse("index.html",
                                               {"request": request, "user": user['fullname']})
         else:
             return templates.TemplateResponse(
@@ -81,7 +81,7 @@ def create_user(request: Request,
     # hashed_password = pwd_context.hash(password)
     try:
         db.create_user(fullname, username, email, password)
-        return templates.TemplateResponse("welcome.html", {"request": request, "user": fullname})
+        return templates.TemplateResponse("blank.html", {"request": request, "user": fullname})
     except Exception as e:
         return "Operation failed: "+str(e)
 

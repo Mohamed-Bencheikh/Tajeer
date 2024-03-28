@@ -20,6 +20,9 @@ def create_user(fullname, username, email, password, role='user'):
     """
     Creates a new user in the database.
     """
+    if users_collection.find_one({"email": email}):
+        raise Exception("Email already in use!")
+
     doc = {
         "fullname": fullname,
         "username": username,
