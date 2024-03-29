@@ -18,7 +18,7 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 # inlHA7sbN8Yi4srm
 @app.get("/")
 def index(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request})
     # return RedirectResponse(url="/user/login")
 
 
@@ -56,8 +56,8 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
             "password": password
         })
         if user:
-            return templates.TemplateResponse("index.html",
-                                              {"request": request, "user": user['fullname']})
+            return templates.TemplateResponse("index2.html",
+                                              {"request": request, "user": user['username']})
         else:
             return templates.TemplateResponse(
                 "form.html", {"request": request, "error": "Invalid user or password!"})
@@ -162,6 +162,16 @@ async def upload_audio(file: UploadFile = File(...), current_user: dict = Depend
         return "Invalid file format. Please upload an MP3 or WAV file."
 
 
+@app.get('/profile')
+def profile(request: Request):
+    return templates.TemplateResponse("profile.html", {"request": request})
+
+
 @app.get('/test')
-def test_db():
-    return users_collection.list_indexes()
+def test(request: Request):
+    return templates.TemplateResponse("404.html", {"request": request})
+
+
+@app.get('/forgot-password')
+def forgot_password(request: Request):
+    return templates.TemplateResponse("forgot-password.html", {"request": request})
