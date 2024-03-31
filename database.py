@@ -6,7 +6,8 @@ load_dotenv()
 user = os.environ.get("ATLAS_USER")
 pwd = os.environ.get("ATLAS_PWD")
 db = os.environ.get("ATLAS_DB")
-uri = f"mongodb+srv://{user}:{pwd}@cluster0.koz4qat.mongodb.net/"
+url = os.environ.get("ATLAS_URL")
+uri = f"mongodb+srv://{user}:{pwd}@{url}"
 # Connect to MongoDB Atlas
 client = MongoClient(uri)
 database = client.get_database(db)

@@ -1,15 +1,20 @@
 from database import users_collection
 from typing import Union
 import database as db
-from models import User, LoginUser, UserRole
+from models import User, LoginUser, Token
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from passlib.context import CryptContext
 from pymongo import MongoClient
+from authentication import authenticate_user, create_access_token, protected_route
+import authentication as auth
 
 app = FastAPI()
+# OAuth2 Security Scheme for token authentication
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 templates = Jinja2Templates(directory="templates")
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
@@ -20,14 +25,6 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
     # return RedirectResponse(url="/user/login")
-
-
-@app.get("/welcome", response_class=HTMLResponse)
-def welcome(request: Request, user: str):
-    return templates.TemplateResponse("welcome.html", {
-        "request": request,
-        "user": user
-    })
 
 
 @app.post("/connect")
@@ -163,7 +160,7 @@ async def upload_audio(file: UploadFile = File(...), current_user: dict = Depend
 
 
 @app.get('/profile')
-def profile(request: Request):
+def profile(request: Request, token: str = Depends(protected_route)):
     return templates.TemplateResponse("profile.html", {"request": request})
 
 
@@ -175,3 +172,23 @@ def test(request: Request):
 @app.get('/forgot-password')
 def forgot_password(request: Request):
     return templates.TemplateResponse("forgot-password.html", {"request": request})
+
+
+# Token route for generating access tokens
+@app.post("/token", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    return await auth.login_for_access_token(form_data)
+
+# Protected route requiring authentication
+
+
+# @app.get("/protected")
+# async def protected_route(token: str = Depends(oauth2_scheme)):
+#     return await auth.protected_route(token)
+
+
+@app.get("/welcome", response_class=HTMLResponse)
+def welcome(request: Request, token: str = Depends(protected_route)):
+    return templates.TemplateResponse("welcome.html", {
+        "request": request
+    })
